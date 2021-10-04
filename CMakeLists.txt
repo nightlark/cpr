@@ -28,6 +28,19 @@ macro(cpr_option OPTION_NAME OPTION_TEXT OPTION_DEFAULT)
     message(STATUS "  ${OPTION_NAME}: ${${OPTION_NAME}}")
 endmacro()
 
+include(CMakeDependentOption)
+macro(cpr_dependent_option OPTION_NAME OPTION_TEXT OPTION_DEFAULT OPTION_DEPENDS OPTION_FORCE)
+    cmake_dependent_option(${OPTION_NAME} ${OPTION_TEXT} ${OPTION_DEFAULT} ${OPTION_DEPENDS} ${OPTION_FORCE})
+    if(DEFINED ENV{${OPTION_NAME}})
+        # Allow overriding the option through an environment variable
+        set(${OPTION_NAME} $ENV{${OPTION_NAME}})
+    endif()
+    if(${OPTION_NAME})
+        add_definitions(-D${OPTION_NAME})
+    endif()
+    message(STATUS "  ${OPTION_NAME}: ${${OPTION_NAME}}")
+endmacro()
+
 option(BUILD_SHARED_LIBS "Build libraries as shared libraries" ON)
 message(STATUS "C++ Requests CMake Options")
 message(STATUS "=======================================================")
@@ -41,7 +54,7 @@ cpr_option(CPR_FORCE_WINSSL_BACKEND "Force to use the WinSSL backend. If CPR_FOR
 cpr_option(CPR_FORCE_DARWINSSL_BACKEND "Force to use the DarwinSSL backend. If CPR_FORCE_OPENSSL_BACKEND, CPR_FORCE_DARWINSSL_BACKEND, and CPR_FORCE_WINSSL_BACKEND are set to to OFF, cpr will try to automatically detect the best available SSL backend (WinSSL - Windows, OpenSSL - Linux, DarwinSSL - Mac ...)." OFF)
 cpr_option(CPR_ENABLE_LINTING "Set to ON to enable clang linting." OFF)
 cpr_option(CPR_BUILD_TESTS "Set to ON to build cpr tests." OFF)
-cpr_option(CPR_BUILD_TESTS_SSL "Set to ON to build cpr ssl tests" ${CPR_BUILD_TESTS})
+cpr_dependent_option(CPR_BUILD_TESTS_SSL "Set to ON to build cpr ssl tests" ${CPR_BUILD_TESTS} "CPR_ENABLE_SSL" OFF)
 message(STATUS "=======================================================")
 
 include(GNUInstallDirs)
