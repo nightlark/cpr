@@ -276,11 +276,11 @@ if(CPR_BUILD_TESTS)
 
     if(CPR_BUILD_TESTS_SSL)
         if(NOT CPR_ENABLE_SSL)
-            message(FATAL_ERROR "OpenSSL is required to build SSL test but CPR_ENABLE_SSL is disabled. Either set CPR_ENABLE_SSL to ON or disable CPR_BUILD_TESTS_SSL.")
+            message(FATAL_ERROR "OpenSSL is required to build SSL tests but CPR_ENABLE_SSL is disabled. Either set CPR_ENABLE_SSL to ON or disable CPR_BUILD_TESTS_SSL.")
         endif()
 
         if(NOT(SSL_BACKEND_USED STREQUAL "OpenSSL"))
-            message(FATAL_ERROR "OpenSSL is required for SSL test, but it seams like OpenSSL is not being used as SSL backend. Either set CPR_BUILD_TESTS_SSL to OFF or set CPR_FORCE_OPENSSL_BACKEND to ON and try again.")
+            message(FATAL_ERROR "OpenSSL is required for SSL tests, but it seems like OpenSSL is not being used as the SSL backend. Either set CPR_BUILD_TESTS_SSL to OFF or set CPR_FORCE_OPENSSL_BACKEND to ON and try again.")
         endif()
 
         set(ENABLE_SSL_TESTS ON CACHE INTERNAL "")
